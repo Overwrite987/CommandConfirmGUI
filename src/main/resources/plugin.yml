@@ -1,0 +1,8 @@
+name: '${project.name}'
+author: OverwriteMC
+version: '${project.version}'
+api-version: 1.16
+main: ru.overwrite.ccgui.CommandConfirmGUI
+commands:
+  commandconfirmgui:
+    aliases: ["ccgui"]
