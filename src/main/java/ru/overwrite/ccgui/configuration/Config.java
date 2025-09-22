@@ -61,7 +61,6 @@ public class Config {
 
         for (String key : itemsSection.getKeys(false)) {
             ConfigurationSection itemSection = itemsSection.getConfigurationSection(key);
-            String displayName = Utils.COLORIZER.colorize(itemSection.getString("display_name", ""));
             Material material = Material.matchMaterial(itemSection.getString("material", "STONE"));
             if (material == null) {
                 continue;
@@ -69,7 +68,11 @@ public class Config {
             Action action = Action.valueOf(itemSection.getString("action", "NAN").toUpperCase());
             ItemStack itemStack = new ItemStack(material);
             ItemMeta meta = itemStack.getItemMeta();
+            String displayName = Utils.COLORIZER.colorize(itemSection.getString("display_name", ""));
+            List<String> lore = itemSection.getStringList("lore");
+            lore.replaceAll(line -> Utils.COLORIZER.colorize(line));
             meta.setDisplayName(displayName);
+            meta.setLore(lore);
             itemStack.setItemMeta(meta);
             List<String> slotList = itemSection.getStringList("slots");
             IntList slots = parseSlots(slotList, size);

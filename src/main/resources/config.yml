@@ -11,6 +11,7 @@ gui_settings:
   items:
     confirm_item:
       display_name: '&aПодтвердить'
+      lore: []
       material: LIME_STAINED_GLASS_PANE
       slots:
         - 0-3
@@ -19,6 +20,7 @@ gui_settings:
       action: CONFIRM
     cancel_item:
       display_name: '&cОтклонить'
+      lore: []
       material: RED_STAINED_GLASS_PANE
       slots:
         - 4-8
@@ -27,6 +29,7 @@ gui_settings:
       action: CANCEL
     filter_item:
       display_name: '&r'
+      lore: []
       material: BLACK_STAINED_GLASS_PANE
       slots:
         - 4
