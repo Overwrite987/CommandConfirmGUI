@@ -1,22 +1,23 @@
 package ru.overwrite.ccgui.configuration;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import ru.overwrite.ccgui.configuration.data.GUITemplate;
 import ru.overwrite.ccgui.configuration.data.MainSettings;
 import ru.overwrite.ccgui.configuration.data.Messages;
 import ru.overwrite.ccgui.utils.Action;
 import ru.overwrite.ccgui.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 public class Config {
@@ -61,12 +62,11 @@ public class Config {
 
         for (String key : itemsSection.getKeys(false)) {
             ConfigurationSection itemSection = itemsSection.getConfigurationSection(key);
-            Material material = Material.matchMaterial(itemSection.getString("material", "STONE"));
-            if (material == null) {
+            String materialName = itemSection.getString("material");
+            ItemStack itemStack = createItemStack(materialName);
+            if (itemStack == null) {
                 continue;
             }
-            Action action = Action.valueOf(itemSection.getString("action", "NAN").toUpperCase());
-            ItemStack itemStack = new ItemStack(material);
             ItemMeta meta = itemStack.getItemMeta();
             String displayName = Utils.COLORIZER.colorize(itemSection.getString("display_name", ""));
             List<String> lore = itemSection.getStringList("lore");
@@ -76,10 +76,33 @@ public class Config {
             itemStack.setItemMeta(meta);
             List<String> slotList = itemSection.getStringList("slots");
             IntList slots = parseSlots(slotList, size);
+            Action action = Action.valueOf(itemSection.getString("action", "NAN").toUpperCase());
             guiItems.add(new GUITemplate.GUIItem(itemStack, slots, action));
         }
 
         GUITemplate = new GUITemplate(title, size, guiItems);
+    }
+
+    private ItemStack createItemStack(String materialName) {
+        if (materialName.startsWith("basehead-")) {
+            ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+            String skinUrl = materialName.replace("basehead-", "");
+            try {
+                SkullMeta meta = (SkullMeta) head.getItemMeta();
+                PlayerProfile profile = Bukkit.createProfile(UUID.randomUUID());
+                profile.setProperty(new ProfileProperty("textures", skinUrl));
+                meta.setPlayerProfile(profile);
+                head.setItemMeta(meta);
+            } catch (Exception ignored) {
+                return null;
+            }
+            return head;
+        }
+        Material material = Material.matchMaterial(materialName);
+        if (material == null) {
+            return null;
+        }
+        return new ItemStack(material);
     }
 
     private IntList parseSlots(List<String> slotList, int size) {
