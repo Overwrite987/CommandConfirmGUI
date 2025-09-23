@@ -78,12 +78,10 @@ public class CCGUIListener implements Listener {
         if (!(e.getPlayer() instanceof Player p)) {
             return;
         }
-        System.out.println(1);
         InventoryHolder inventoryHolder = e.getInventory().getHolder();
         if (!(inventoryHolder instanceof CCGUIHolder)) {
             return;
         }
-        System.out.println(2);
         if (!confirmationCache.remove(p.getUniqueId())) {
             p.sendMessage(pluginConfig.getMessages().cancelled());
         }
