@@ -48,7 +48,7 @@ public class CCGUICommand implements TabExecutor {
                     sender.sendMessage(messages.addOrRemoveHelp());
                     return true;
                 }
-                String command = args[1].startsWith("/") ? args[1] : "/" + args[1];
+                String command = args[1].charAt(0) == '/' ? args[1] : "/" + args[1];
                 List<String> commands = new ArrayList<>(pluginConfig.getMainSettings().commands());
                 commands.add(command);
                 updateCommands(commands);
@@ -60,7 +60,7 @@ public class CCGUICommand implements TabExecutor {
                     sender.sendMessage(messages.addOrRemoveHelp());
                     return true;
                 }
-                String command = args[1].startsWith("/") ? args[1] : "/" + args[1];
+                String command = args[1].charAt(0) == '/' ? args[1] : "/" + args[1];
                 List<String> commands = new ArrayList<>(pluginConfig.getMainSettings().commands());
                 commands.remove(command);
                 updateCommands(commands);
